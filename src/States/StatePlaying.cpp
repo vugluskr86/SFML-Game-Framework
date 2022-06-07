@@ -17,7 +17,7 @@
 
 #include "../Game/Systems/SpriteRender.h"
 #include "../Game/Systems/SpriteMove.h"
-#include "../Game/Systems/PlayerMovementInput.h"
+#include "../Game/Systems/PlayerInput.h"
 #include "../Game/Systems/MobBehaviour.h"
 
 entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
@@ -96,7 +96,7 @@ StatePlaying::StatePlaying(Game& game)
 
     systems.emplace_back(new SpriteRender(registry));
     systems.emplace_back(new SpriteMove(registry));
-    systems.emplace_back(new PlayerMovementInput(registry));
+    systems.emplace_back(new PlayerInput(registry));
     systems.emplace_back(new MobBehaviour(registry));
 }
 

@@ -4,9 +4,9 @@
 
 #include "../BaseSystem.h"
 
-class PlayerMovementInput : public BaseSystem {
+class PlayerInput : public BaseSystem {
   public:
-    PlayerMovementInput(entt::registry& reg)
+    PlayerInput(entt::registry& reg)
         : BaseSystem(reg)
     {
 

@@ -22,7 +22,7 @@ add_executable(${PROJECT_NAME}
     src/Util/FPSCounter.cpp
     src/Util/Maths.cpp
     src/Util/Maths.cpp
- "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerMovementInput.h" "src/Game/Systems/PlayerMovementInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp")
+ "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp")
 
 #Set C++17
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
