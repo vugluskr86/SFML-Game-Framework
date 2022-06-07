@@ -7,8 +7,8 @@
 
 class SpriteMove : public BaseSystem {
   public:
-    SpriteMove(entt::registry& reg)
-        : BaseSystem(reg)
+    SpriteMove(entt::registry& reg, Game& game)
+        : BaseSystem(reg, game)
     {
     }
 

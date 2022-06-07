@@ -2,10 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../Game.h"
+
 class BaseSystem {
   public:
-    BaseSystem(entt::registry& registry)
+    BaseSystem(entt::registry& registry, Game& game)
         : registry(registry)
+        , game(game)
     {
 
     }
@@ -18,4 +21,5 @@ class BaseSystem {
 
 protected:
     entt::registry& registry;
+    Game& game;
 };

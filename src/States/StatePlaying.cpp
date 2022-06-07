@@ -94,10 +94,10 @@ StatePlaying::StatePlaying(Game& game)
         initMob(registry, mobtTexture, window);
     }
 
-    systems.emplace_back(new SpriteRender(registry));
-    systems.emplace_back(new SpriteMove(registry));
-    systems.emplace_back(new PlayerInput(registry));
-    systems.emplace_back(new MobBehaviour(registry));
+    systems.emplace_back(new SpriteRender(registry, game));
+    systems.emplace_back(new SpriteMove(registry, game));
+    systems.emplace_back(new PlayerInput(registry, game));
+    systems.emplace_back(new MobBehaviour(registry, game));
 }
 
 void StatePlaying::handleEvent(sf::Event e)

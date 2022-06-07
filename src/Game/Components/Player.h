@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm/vec2.hpp>
+
 // #include <vector>
 
 /*
@@ -20,4 +22,5 @@ struct Player
 	unsigned int health;
 	float speed;
 	// PlayerInputConfig inputConfig;
+    glm::vec2 weaponTargetNormalize;
 };

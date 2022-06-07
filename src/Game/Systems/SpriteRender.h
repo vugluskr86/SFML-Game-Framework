@@ -7,10 +7,13 @@
 
 class SpriteRender : public BaseSystem {
   public:
-    SpriteRender(entt::registry& reg)
-        : BaseSystem(reg)
+    SpriteRender(entt::registry& reg, Game& game)
+        : BaseSystem(reg, game)
     {
     }
 
     void render(sf::RenderTarget& renderer);
+
+  private:
+    void debugDraw(sf::RenderTarget& renderer);
 };
