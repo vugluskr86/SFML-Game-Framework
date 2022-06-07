@@ -63,9 +63,6 @@ void PlayerInput::handleInput()
     auto dist = glm::distance(playerPos.value, vec2Mouse);
     player.weaponTargetNormalize = target / dist;
 
-    std::cout << x << "," << y << std::endl;
-
-
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         
         const entt::entity bulletEntity = registry.create();

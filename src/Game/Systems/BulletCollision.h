@@ -5,12 +5,12 @@
 
 #include "../BaseSystem.h"
 
-class MobBehaviour : public BaseSystem {
+class BulletCollision : public BaseSystem {
   public:
-    MobBehaviour(entt::registry& reg, Game& game);
+    BulletCollision(entt::registry& reg, Game& game)
+        : BaseSystem(reg, game)
+    {
+    }
 
     void update(sf::Time deltaTime);
-
-  private:
-    sf::Texture mobTexture;
 };

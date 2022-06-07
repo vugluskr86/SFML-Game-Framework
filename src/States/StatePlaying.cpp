@@ -19,6 +19,8 @@
 #include "../Game/Systems/SpriteMove.h"
 #include "../Game/Systems/PlayerInput.h"
 #include "../Game/Systems/MobBehaviour.h"
+#include "../Game/Systems/BulletCollision.h"
+
 
 entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
                         const sf::RenderWindow& window)
@@ -47,7 +49,6 @@ entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
 entt::entity initMob(entt::registry& reg, const sf::Texture& texture,
                      const sf::RenderWindow& window)
 {
-    // TODO: Use Mersenne twister
     std::random_device rnd;
     std::default_random_engine eng(rnd());
     std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
@@ -94,10 +95,11 @@ StatePlaying::StatePlaying(Game& game)
         initMob(registry, mobtTexture, window);
     }
 
-    systems.emplace_back(new SpriteRender(registry, game));
+    systems.emplace_back(new BulletCollision(registry, game));
     systems.emplace_back(new SpriteMove(registry, game));
     systems.emplace_back(new PlayerInput(registry, game));
     systems.emplace_back(new MobBehaviour(registry, game));
+    systems.emplace_back(new SpriteRender(registry, game));
 }
 
 void StatePlaying::handleEvent(sf::Event e)

@@ -1,13 +1,24 @@
 #include "MobBehaviour.h"
 
+#include <random>
+
 #include <glm/glm/vec2.hpp>
 #include <glm/glm/geometric.hpp>
+
+#include "../../ResourceManager/ResourceHolder.h"
 
 #include "../Components/Position.h"
 #include "../Components/Velocity.h"
 #include "../Components/Mob.h"
 #include "../Components/Player.h"
 #include "../Components/Bullet.h"
+#include "../Components/Sprite.h"
+
+MobBehaviour::MobBehaviour(entt::registry& reg, Game& game)
+    : BaseSystem(reg, game)
+{
+   mobTexture = ResourceHolder::get().textures.get("mob");
+}
 
 void MobBehaviour::update(sf::Time deltaTime)
 {
@@ -43,4 +54,29 @@ void MobBehaviour::update(sf::Time deltaTime)
         }
         */
     });
+
+
+    auto mobsCount = mobsView.size_hint();
+
+    if (mobsCount < 10) {
+        std::random_device rnd;
+        std::default_random_engine eng(rnd());
+        std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
+
+        const entt::entity e = registry.create();
+
+        auto& mob = registry.emplace<Mob>(e);
+        mob.speed = 1.2f;
+        auto& pos = registry.emplace<Position>(e);
+        registry.emplace<Velocity>(e);
+        auto& spr = registry.emplace<Sprite>(e);
+        spr.gfx.setTexture(mobTexture);
+        const float randScale = 0.5f + randDistr(eng);
+        spr.gfx.setScale(randScale, randScale);
+
+        auto windowSize = game.getWindow().getSize();
+
+        pos.value.x = static_cast<float>(randDistr(eng)) * windowSize.x;
+        pos.value.y = static_cast<float>(randDistr(eng)) * windowSize.y;
+    }
 }
