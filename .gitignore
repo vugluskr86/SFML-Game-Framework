@@ -22,3 +22,7 @@ Release/
 *.srctrlbm
 
 GAME_NAME/
+
+CMakeSettings.json
+
+out/

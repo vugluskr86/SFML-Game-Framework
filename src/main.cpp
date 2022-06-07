@@ -5,10 +5,13 @@
 #include <imgui_sfml/imgui-SFML.h>
 #include "Util/FPSCounter.h"
 
+#include "Game.h"
+
 int main()
 {
+    /*
     sf::RenderWindow window({1280, 720}, "Game");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
     ImGui::SFML::Init(window);
 
     // Set up time stamp stuff
@@ -76,4 +79,8 @@ int main()
         // tryPop();
     }
     ImGui::SFML::Shutdown();
+    */
+    Game game;
+    game.run();
+    return EXIT_SUCCESS;
 }

@@ -80,7 +80,7 @@ namespace gui {
             case sf::Event::TextEntered:
                 if (m_isActive) {
                     // Get the key that was entered
-                    unsigned char keyCode = e.text.unicode;
+                    unsigned char keyCode = static_cast<unsigned char>(e.text.unicode);
 
                     if (isValidCharacter(keyCode)) {
                         if (m_text.getGlobalBounds().width + 30 <=

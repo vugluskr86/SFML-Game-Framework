@@ -1,7 +1,13 @@
 #pragma once
 
-#include "../GUI/StackMenu.h"
+#include <vector>
+
+#include <entt/single_include/entt/entt.hpp>
+
 #include "StateBase.h"
+
+#include "../GUI/StackMenu.h"
+#include "../Game/BaseSystem.h"
 
 /**
     Game state for the main part of the game
@@ -18,4 +24,7 @@ class StatePlaying : public StateBase {
 
   private:
     gui::StackMenu m_TestMenu;
+
+    entt::registry registry;
+    std::vector <std::unique_ptr<BaseSystem>> systems;
 };

@@ -22,7 +22,7 @@ add_executable(${PROJECT_NAME}
     src/Util/FPSCounter.cpp
     src/Util/Maths.cpp
     src/Util/Maths.cpp
-)
+ "src/Game/Systems/RenderSystem.h" "src/Game/BaseSystem.h" "src/Game/Systems/RenderSystem.cpp" "src/Game/Systems/MoveSystem.h" "src/Game/Systems/MoveSystem.cpp"  "src/Game/Systems/PlayerInputSystem.h" "src/Game/Systems/PlayerInputSystem.cpp" "src/Game/Systems/MobAISystem.h" "src/Game/Systems/MobAISystem.cpp")
 
 #Set C++17
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
@@ -31,7 +31,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 #Set flags
 if(MSVC)
   	target_compile_options(${PROJECT_NAME} PRIVATE 
-    	/W4 /WX)
+    	/W3 /WX)
 else()
   	target_compile_options(${PROJECT_NAME} PRIVATE 
 		-Wall -Wextra -pedantic -Werror)		#Warning flags
@@ -45,8 +45,13 @@ find_package(Threads)
 find_package(OpenGL REQUIRED)
 find_package(SFML REQUIRED audio network graphics window system)
 
+include_directories(${SFML_INCLUDE_DIR})
+
 add_subdirectory(deps/imgui)
 add_subdirectory(deps/imgui_sfml)
+
+add_subdirectory(deps/glm)
+add_subdirectory(deps/entt)
 
 target_include_directories(
     ${PROJECT_NAME}
