@@ -1,10 +1,3 @@
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/Window/Event.hpp>
-#include <imgui/imgui.h>
-#include <imgui_sfml/imgui-SFML.h>
-#include "Util/FPSCounter.h"
-
 #include "Game.h"
 
 int main()
@@ -80,6 +73,7 @@ int main()
     }
     ImGui::SFML::Shutdown();
     */
+
     Game game;
     game.run();
     return EXIT_SUCCESS;

@@ -5,24 +5,8 @@ project(GAME_NAME VERSION 1.0)
 
 #Set executable
 add_executable(${PROJECT_NAME}     
-    src/main.cpp
-    src/Game.cpp
-
-    src/GUI/Button.cpp
-    src/GUI/StackMenu.cpp
-    src/GUI/Textbox.cpp
-    src/GUI/Widget.cpp
-    
-    src/ResourceManager/ResourceHolder.cpp
-
-    src/States/StatePlaying.cpp
-
-    src/Util/Animation.cpp
-    src/Util/FileUtil.cpp
-    src/Util/FPSCounter.cpp
-    src/Util/Maths.cpp
-    src/Util/Maths.cpp
- "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp"  "src/Game/Systems/BulletCollision.h" "src/Game/Systems/BulletCollision.cpp" "src/Game/Components/Weapon.h")
+	"src/main.cpp" "src/Game.cpp" "src/GUI/Button.cpp" "src/GUI/StackMenu.cpp" "src/GUI/Textbox.cpp" "src/GUI/Widget.cpp" "src/ResourceManager/ResourceHolder.cpp" "src/States/StatePlaying.cpp" "src/Util/Animation.cpp" "src/Util/FileUtil.cpp" "src/Util/FPSCounter.cpp" "src/Util/Maths.cpp" "src/Util/Maths.cpp" "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp"  "src/Game/Systems/BulletCollision.h" "src/Game/Systems/BulletCollision.cpp" "src/Game/Components/Weapon.h"
+)
 
 #Set C++17
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
@@ -46,15 +30,18 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
 #Find libraries
+find_package(Box2D)
 find_package(Threads)
 find_package(OpenGL REQUIRED)
 find_package(SFML REQUIRED audio network graphics window system)
 
-include_directories(${SFML_INCLUDE_DIR})
+include_directories(
+    ${SFML_INCLUDE_DIR}
+    ${BOX2D_INCLUDE_DIR}
+)
 
 add_subdirectory(deps/imgui)
 add_subdirectory(deps/imgui_sfml)
-
 add_subdirectory(deps/glm)
 add_subdirectory(deps/entt)
 
