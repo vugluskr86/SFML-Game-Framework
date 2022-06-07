@@ -1,9 +1,9 @@
-#include "RenderSystem.h"
+#include "SpriteRender.h"
 
 #include "../Components/Sprite.h"
 
 
-void RenderSystem::render(sf::RenderTarget& renderer)
+void SpriteRender::render(sf::RenderTarget& renderer)
 {
     auto view = registry.view<Sprite>();
     view.each([&renderer](Sprite& spr) { renderer.draw(spr.gfx); });

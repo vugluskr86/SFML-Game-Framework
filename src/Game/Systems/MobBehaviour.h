@@ -5,9 +5,9 @@
 
 #include "../BaseSystem.h"
 
-class MoveSystem : public BaseSystem {
+class MobBehaviour : public BaseSystem {
   public:
-    MoveSystem(entt::registry& reg)
+    MobBehaviour(entt::registry& reg)
         : BaseSystem(reg)
     {
     }

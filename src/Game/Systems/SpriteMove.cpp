@@ -1,4 +1,4 @@
-#include "MoveSystem.h"
+#include "SpriteMove.h"
 
 #include <glm/glm/geometric.hpp>
 #include <glm/glm/vec2.hpp>
@@ -7,7 +7,7 @@
 #include "../Components/Velocity.h"
 #include "../Components/Sprite.h"
 
-void MoveSystem::update(sf::Time deltaTime)
+void SpriteMove::update(sf::Time deltaTime)
 {
     auto view = registry.view<Sprite, Position, Velocity>();
 

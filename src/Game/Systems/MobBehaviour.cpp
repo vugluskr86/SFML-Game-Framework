@@ -1,4 +1,4 @@
-#include "MobAISystem.h"
+#include "MobBehaviour.h"
 
 #include <glm/glm/vec2.hpp>
 #include <glm/glm/geometric.hpp>
@@ -9,7 +9,7 @@
 #include "../Components/Player.h"
 #include "../Components/Bullet.h"
 
-void MobAISystem::update(sf::Time deltaTime)
+void MobBehaviour::update(sf::Time deltaTime)
 {
     auto mobsView = registry.view<Mob, Velocity, Position>();
     auto playerView = registry.view<Player, Position>();

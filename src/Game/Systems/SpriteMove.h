@@ -1,16 +1,16 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <entt/single_include/entt/entt.hpp>
 
 #include "../BaseSystem.h"
 
-class PlayerInputSystem : public BaseSystem {
+class SpriteMove : public BaseSystem {
   public:
-    PlayerInputSystem(entt::registry& reg)
+    SpriteMove(entt::registry& reg)
         : BaseSystem(reg)
     {
-
     }
 
-    void handleInput();
+    void update(sf::Time deltaTime);
 };

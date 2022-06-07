@@ -15,10 +15,10 @@
 #include "../Game/Components/Velocity.h"
 #include "../Game/Components/Mob.h"
 
-#include "../Game/Systems/RenderSystem.h"
-#include "../Game/Systems/MoveSystem.h"
-#include "../Game/Systems/PlayerInputSystem.h"
-#include "../Game/Systems/MobAISystem.h"
+#include "../Game/Systems/SpriteRender.h"
+#include "../Game/Systems/SpriteMove.h"
+#include "../Game/Systems/PlayerMovementInput.h"
+#include "../Game/Systems/MobBehaviour.h"
 
 entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
                         const sf::RenderWindow& window)
@@ -94,10 +94,10 @@ StatePlaying::StatePlaying(Game& game)
         initMob(registry, mobtTexture, window);
     }
 
-    systems.emplace_back(new RenderSystem(registry));
-    systems.emplace_back(new MoveSystem(registry));
-    systems.emplace_back(new PlayerInputSystem(registry));
-    systems.emplace_back(new MobAISystem(registry));
+    systems.emplace_back(new SpriteRender(registry));
+    systems.emplace_back(new SpriteMove(registry));
+    systems.emplace_back(new PlayerMovementInput(registry));
+    systems.emplace_back(new MobBehaviour(registry));
 }
 
 void StatePlaying::handleEvent(sf::Event e)

@@ -1,11 +1,11 @@
-#include "PlayerInputSystem.h"
+#include "PlayerMovementInput.h"
 
 #include <SFML/Graphics.hpp>
 
 #include "../Components/Velocity.h"
 #include "../Components/Player.h"
 
-void PlayerInputSystem::handleInput()
+void PlayerMovementInput::handleInput()
 {
     auto view = registry.view<Player, Velocity>();
 

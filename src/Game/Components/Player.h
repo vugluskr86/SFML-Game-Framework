@@ -17,7 +17,6 @@ struct PlayerInputConfig
 
 struct Player 
 { 
-	// TODO: Check template specialization for empty struct (SFINAE)
 	unsigned int health;
 	float speed;
 	// PlayerInputConfig inputConfig;

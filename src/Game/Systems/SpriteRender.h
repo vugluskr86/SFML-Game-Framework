@@ -5,12 +5,12 @@
 
 #include "../BaseSystem.h"
 
-class MobAISystem : public BaseSystem {
+class SpriteRender : public BaseSystem {
   public:
-    MobAISystem(entt::registry& reg)
+    SpriteRender(entt::registry& reg)
         : BaseSystem(reg)
     {
     }
 
-    void update(sf::Time deltaTime);
+    void render(sf::RenderTarget& renderer);
 };
