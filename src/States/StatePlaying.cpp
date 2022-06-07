@@ -91,15 +91,17 @@ StatePlaying::StatePlaying(Game& game)
 
     initPlayer(registry, catTexture, window);
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 5; i++) {
         initMob(registry, mobtTexture, window);
     }
 
-    systems.emplace_back(new BulletCollision(registry, game));
-    systems.emplace_back(new SpriteMove(registry, game));
-    systems.emplace_back(new PlayerInput(registry, game));
-    systems.emplace_back(new MobBehaviour(registry, game));
-    systems.emplace_back(new SpriteRender(registry, game));
+    systems.emplace_back(new BulletCollision(registry, game, *this));
+    systems.emplace_back(new SpriteMove(registry, game, *this));
+    systems.emplace_back(new PlayerInput(registry, game, *this));
+    systems.emplace_back(new MobBehaviour(registry, game, *this));
+    systems.emplace_back(new SpriteRender(registry, game, *this));
+
+    // physicWorld = new b2World(b2Vec2(0.0f, 0.0f));
 }
 
 void StatePlaying::handleEvent(sf::Event e)

@@ -3,12 +3,14 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Game.h"
+#include "../States/StateBase.h"
 
 class BaseSystem {
   public:
-    BaseSystem(entt::registry& registry, Game& game)
+    BaseSystem(entt::registry& registry, Game& game, StateBase& state)
         : registry(registry)
         , game(game)
+        , state(state)
     {
 
     }
@@ -22,4 +24,5 @@ class BaseSystem {
 protected:
     entt::registry& registry;
     Game& game;
+    StateBase& state;
 };

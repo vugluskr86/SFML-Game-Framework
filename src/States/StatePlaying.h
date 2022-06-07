@@ -9,6 +9,8 @@
 #include "../GUI/StackMenu.h"
 #include "../Game/BaseSystem.h"
 
+#include <box2d/box2d.h>
+
 /**
     Game state for the main part of the game
 */
@@ -27,4 +29,7 @@ class StatePlaying : public StateBase {
 
     entt::registry registry;
     std::vector <std::unique_ptr<BaseSystem>> systems;
+
+  public: // TODO: Shit code
+    b2World* physicWorld;
 };

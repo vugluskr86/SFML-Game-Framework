@@ -8,7 +8,7 @@
 
 class PlayerInput : public BaseSystem {
   public:
-    PlayerInput(entt::registry& reg, Game& game);
+    PlayerInput(entt::registry& reg, Game& game, StateBase& state);
 
     void handleInput();
 

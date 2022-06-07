@@ -9,7 +9,7 @@
 #include "../Components/Position.h"
 #include "../Components/Mob.h"
 
-// TODO: Shit code, difficult, memory!!!
+// TODO: Shit code, difficult, memory!!! Need object pool!!!
 void BulletCollision::update(sf::Time deltaTime)
 {
     auto& mobsView = registry.view<Mob, Position>();

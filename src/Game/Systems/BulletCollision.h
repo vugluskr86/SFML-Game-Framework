@@ -7,8 +7,8 @@
 
 class BulletCollision : public BaseSystem {
   public:
-    BulletCollision(entt::registry& reg, Game& game)
-        : BaseSystem(reg, game)
+    BulletCollision(entt::registry& reg, Game& game, StateBase& state)
+        : BaseSystem(reg, game, state)
     {
     }
 

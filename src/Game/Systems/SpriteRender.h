@@ -7,8 +7,8 @@
 
 class SpriteRender : public BaseSystem {
   public:
-    SpriteRender(entt::registry& reg, Game& game)
-        : BaseSystem(reg, game)
+    SpriteRender(entt::registry& reg, Game& game, StateBase& state)
+        : BaseSystem(reg, game, state)
     {
     }
 

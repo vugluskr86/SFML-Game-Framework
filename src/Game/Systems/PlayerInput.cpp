@@ -11,9 +11,12 @@
 #include "../Components/Position.h"
 #include "../Components/Bullet.h"
 #include "../Components/Sprite.h"
+#include "../Components/PhysicBody.h"
 
-PlayerInput::PlayerInput(entt::registry& reg, Game& game)
-    : BaseSystem(reg, game)
+#include "../../States/StatePlaying.h"
+
+PlayerInput::PlayerInput(entt::registry& reg, Game& game, StateBase& state)
+    : BaseSystem(reg, game, state)
 {
     bulletTexture = ResourceHolder::get().textures.get("bullet");
 }
@@ -63,6 +66,8 @@ void PlayerInput::handleInput()
     auto dist = glm::distance(playerPos.value, vec2Mouse);
     player.weaponTargetNormalize = target / dist;
 
+    StatePlaying& playerState = static_cast<StatePlaying&>(state);
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         
         const entt::entity bulletEntity = registry.create();
@@ -72,10 +77,14 @@ void PlayerInput::handleInput()
         auto& bulletSpr = registry.emplace<Sprite>(bulletEntity);
         auto& bulletVel = registry.emplace<Velocity>(bulletEntity);
         auto& bulletPos = registry.emplace<Position>(bulletEntity);
+        auto& physicBody = registry.emplace<PhysicBody>(bulletEntity);
 
         bulletPos.value = playerPos.value;
         bulletVel.value = player.weaponTargetNormalize * 10.0f;
 
         bulletSpr.gfx.setTexture(bulletTexture);
+
+        // TODO: Shit code, integration WIP
+        // physicBody.bodyDef = playerState.physicWorld->CreateBody(new b2BodyDef());
     }
 }

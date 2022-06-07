@@ -7,7 +7,7 @@
 
 class MobBehaviour : public BaseSystem {
   public:
-    MobBehaviour(entt::registry& reg, Game& game);
+    MobBehaviour(entt::registry& reg, Game& game, StateBase& state);
 
     void update(sf::Time deltaTime);
 

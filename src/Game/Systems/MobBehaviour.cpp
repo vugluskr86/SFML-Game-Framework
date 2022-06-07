@@ -14,8 +14,8 @@
 #include "../Components/Bullet.h"
 #include "../Components/Sprite.h"
 
-MobBehaviour::MobBehaviour(entt::registry& reg, Game& game)
-    : BaseSystem(reg, game)
+MobBehaviour::MobBehaviour(entt::registry& reg, Game& game, StateBase& state)
+    : BaseSystem(reg, game, state)
 {
    mobTexture = ResourceHolder::get().textures.get("mob");
 }
@@ -58,7 +58,7 @@ void MobBehaviour::update(sf::Time deltaTime)
 
     auto mobsCount = mobsView.size_hint();
 
-    if (mobsCount < 10) {
+    if (mobsCount < 3) {
         std::random_device rnd;
         std::default_random_engine eng(rnd());
         std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
