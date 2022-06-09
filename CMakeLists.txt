@@ -13,8 +13,6 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 
 
-# set(BOX2D_STATIC_LIBRARIES TRUE)
-
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
     VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
@@ -59,6 +57,7 @@ target_link_libraries(${PROJECT_NAME}
     imgui_sfml
     Threads::Threads
     box2d::box2d
+    sfml-audio
     sfml-system
     sfml-network
     sfml-graphics
