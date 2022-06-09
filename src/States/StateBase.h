@@ -6,7 +6,7 @@
 
 class Game;
 
-class StateBase : public NonCopyable {
+class StateBase /* : public NonCopyable*/ {
   public:
     StateBase(Game& game)
         : m_pGame(&game)
