@@ -4,9 +4,7 @@
 #include <iostream>
 #include <entt/single_include/entt/entt.hpp>
 
-#include "../GUI/Button.h"
-#include "../GUI/Textbox.h"
-#include "../Game.h"
+#include "../ResourceManager/ResourceHolder.h"
 
 #include "../Game/Components/Bullet.h"
 #include "../Game/Components/Player.h"
@@ -20,7 +18,6 @@
 #include "../Game/Systems/PlayerInput.h"
 #include "../Game/Systems/MobBehaviour.h"
 #include "../Game/Systems/BulletCollision.h"
-
 
 entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
                         const sf::RenderWindow& window)
@@ -71,20 +68,12 @@ entt::entity initMob(entt::registry& reg, const sf::Texture& texture,
     return e;
 }
 
-
 std::string test;
 
 StatePlaying::StatePlaying(Game& game)
     : StateBase(game)
-    , m_TestMenu(game.getWindow(), 50)
 {
-    auto b = std::make_unique<gui::Button>();
-    b->setText("Button 1");
-    b->setFunction([]() { std::cout << "Button 1 clicked!" << '\n'; });
-
-    m_TestMenu.addWidget(std::move(b));
-
-    auto& window = m_pGame->getWindow();
+    const sf::RenderWindow& window = m_pGame->getWindow();
 
     auto& catTexture = ResourceHolder::get().textures.get("cat");
     auto& mobtTexture = ResourceHolder::get().textures.get("mob");
@@ -101,13 +90,17 @@ StatePlaying::StatePlaying(Game& game)
     systems.emplace_back(new MobBehaviour(registry, game, *this));
     systems.emplace_back(new SpriteRender(registry, game, *this));
 
-    // physicWorld = new b2World(b2Vec2(0.0f, 0.0f));
+    physicWorld = new b2World(b2Vec2(0.0f, 0.0f));
+    debugDrawBox2d = new Box2dDebugDraw(window, 1.0f);
+}
+
+StatePlaying::~StatePlaying()
+{
+    delete debugDrawBox2d;
 }
 
 void StatePlaying::handleEvent(sf::Event e)
 {
-    m_TestMenu.handleEvent(e, m_pGame->getWindow());
-
     for (auto& system : systems) {
         system->handleEvent(e);
     }
@@ -139,6 +132,4 @@ void StatePlaying::render(sf::RenderTarget& renderer)
     for (auto& system : systems) {
         system->render(renderer);
     }
-
-    m_TestMenu.render(renderer);
 }

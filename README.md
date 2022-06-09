@@ -38,3 +38,14 @@ To build and run in release mode, simply add the `release` suffix:
 sh scripts/build.sh release
 sh scripts/run.sh release
 ```
+
+### Windows
+
+Install vcpkg & add to path
+https://vcpkg.io/en/getting-started.html
+
+vcpkg install box2d
+vcpkg install sfml
+
+Open project in visual studio 2019 as custom folder
+

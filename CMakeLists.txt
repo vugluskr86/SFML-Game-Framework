@@ -5,13 +5,15 @@ project(GAME_NAME VERSION 1.0)
 
 #Set executable
 add_executable(${PROJECT_NAME}     
-	"src/main.cpp" "src/Game.cpp" "src/GUI/Button.cpp" "src/GUI/StackMenu.cpp" "src/GUI/Textbox.cpp" "src/GUI/Widget.cpp" "src/ResourceManager/ResourceHolder.cpp" "src/States/StatePlaying.cpp" "src/Util/Animation.cpp" "src/Util/FileUtil.cpp" "src/Util/FPSCounter.cpp" "src/Util/Maths.cpp" "src/Util/Maths.cpp" "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp"  "src/Game/Systems/BulletCollision.h" "src/Game/Systems/BulletCollision.cpp" "src/Game/Components/Weapon.h"
- "src/Game/Components/PhysicBody.h")
+	"src/main.cpp" "src/Game.cpp" "src/ResourceManager/ResourceHolder.cpp" "src/States/StatePlaying.cpp" "src/Util/Animation.cpp" "src/Util/FileUtil.cpp" "src/Util/FPSCounter.cpp" "src/Util/Maths.cpp" "src/Util/Maths.cpp" "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp"  "src/Game/Systems/BulletCollision.h" "src/Game/Systems/BulletCollision.cpp" "src/Game/Components/Weapon.h"
+ "src/Game/Components/PhysicBody.h" "src/Util/Box2dDebugDraw.h")
 
 #Set C++17
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 
+
+# set(BOX2D_STATIC_LIBRARIES TRUE)
 
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
@@ -30,10 +32,10 @@ endif()
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
 #Find libraries
-find_package(Box2D)
+find_package(box2d CONFIG REQUIRED)
 find_package(Threads)
 find_package(OpenGL REQUIRED)
-find_package(SFML REQUIRED audio network graphics window system)
+find_package(SFML COMPONENTS audio system window graphics CONFIG REQUIRED)
 
 include_directories(
     ${SFML_INCLUDE_DIR}
@@ -55,8 +57,11 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} 
     imgui
     imgui_sfml
-    Threads::Threads 
+    Threads::Threads
+    box2d::box2d
+    sfml-system
+    sfml-network
+    sfml-graphics
+    sfml-window
     ${OPENGL_LIBRARIES} 
-    ${SFML_LIBRARIES} 
-    ${SFML_DEPENDENCIES}
 )
