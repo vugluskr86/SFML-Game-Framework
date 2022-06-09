@@ -45,6 +45,7 @@ Install vcpkg & add to path
 https://vcpkg.io/en/getting-started.html
 
 vcpkg install box2d
+
 vcpkg install sfml
 
 Open project in visual studio 2019 as custom folder

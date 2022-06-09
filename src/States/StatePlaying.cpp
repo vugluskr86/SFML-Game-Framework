@@ -92,10 +92,26 @@ StatePlaying::StatePlaying(Game& game)
 
     physicWorld = new b2World(b2Vec2(0.0f, 0.0f));
     debugDrawBox2d = new Box2dDebugDraw(window, 1.0f);
+    debugDrawBox2d->SetFlags(b2Draw::e_shapeBit | b2Draw::e_jointBit |
+                       b2Draw::e_centerOfMassBit);
+    physicWorld->SetDebugDraw(debugDrawBox2d);
+
+
+    b2BodyDef groundBodyDef;
+    groundBodyDef.position.Set(0.0f, 0.0f);
+
+    b2Body* groundBody = physicWorld->CreateBody(&groundBodyDef);
+
+    b2PolygonShape groundBox;
+    groundBox.SetAsBox(100.0f, 100.0f);
+
+
+    groundBody->CreateFixture(&groundBox, 0.0f);
 }
 
 StatePlaying::~StatePlaying()
 {
+    delete physicWorld;
     delete debugDrawBox2d;
 }
 
@@ -132,4 +148,6 @@ void StatePlaying::render(sf::RenderTarget& renderer)
     for (auto& system : systems) {
         system->render(renderer);
     }
+
+    physicWorld->DebugDraw();
 }
