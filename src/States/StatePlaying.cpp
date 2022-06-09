@@ -57,31 +57,6 @@ entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
     return e;
 }
 
-entt::entity initMob(entt::registry& reg, const sf::Texture& texture,
-                     const sf::RenderWindow& window)
-{
-    std::random_device rnd;
-    std::default_random_engine eng(rnd());
-    std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
-
-    const entt::entity e = reg.create();
-
-    auto& mob = reg.emplace<Mob>(e);
-    mob.speed = 1.2f;
-    auto& pos = reg.emplace<Position>(e);
-    reg.emplace<Velocity>(e);
-    auto& spr = reg.emplace<Sprite>(e);
-    spr.gfx.setTexture(texture);
-    const float randScale = 0.5f + randDistr(eng);
-    spr.gfx.setScale(randScale, randScale);
-
-    auto windowSize = window.getSize();
-
-    pos.value.x = static_cast<float>(randDistr(eng)) * windowSize.x;
-    pos.value.y = static_cast<float>(randDistr(eng)) * windowSize.y;
-    return e;
-}
-
 std::string test;
 
 StatePlaying::StatePlaying(Game& game)
@@ -100,21 +75,17 @@ StatePlaying::StatePlaying(Game& game)
 
     initPlayer(registry, catTexture, window, physicWorld);
 
-    /*
-    for (int i = 0; i < 5; i++) {
-        initMob(registry, mobtTexture, window);
-    }
-    */
 
     systems.emplace_back(new PlayerInput(registry, game, *this));
     systems.emplace_back(new SpriteRender(registry, game, *this));
     systems.emplace_back(new SpriteMove(registry, game, *this));
-    
+    systems.emplace_back(new MobBehaviour(registry, game, *this));
+
 
     // 
     // systems.emplace_back(new BulletCollision(registry, game, *this));
     // 
-    // systems.emplace_back(new MobBehaviour(registry, game, *this));
+    // 
     // systems.emplace_back(new SpriteRender(registry, game, *this));
 
 

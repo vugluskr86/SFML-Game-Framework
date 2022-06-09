@@ -13,6 +13,9 @@
 #include "../Components/Player.h"
 #include "../Components/Bullet.h"
 #include "../Components/Sprite.h"
+#include "../Components/PhysicBody.h"
+
+#include "../../States/StatePlaying.h"
 
 MobBehaviour::MobBehaviour(entt::registry& reg, Game& game, StateBase& state)
     : BaseSystem(reg, game, state)
@@ -22,18 +25,29 @@ MobBehaviour::MobBehaviour(entt::registry& reg, Game& game, StateBase& state)
 
 void MobBehaviour::update(sf::Time deltaTime)
 {
-    auto mobsView = registry.view<Mob, Velocity, Position>();
+    auto mobsView = registry.view<Mob, PhysicBody>();
 
-    auto view = registry.view<Player, Position>();
+    auto view = registry.view<Player, PhysicBody>();
     auto firstPlayer = view.front();
-    auto& playerPos = registry.get<Position>(firstPlayer);
 
-    mobsView.each([&](Mob& mob, Velocity& vel, Position& mobPos) {
-        const float distance = glm::distance(mobPos.value, playerPos.value);
+    auto& playerPhysicBody = registry.get<PhysicBody>(firstPlayer);
+    auto playerPosBox2d = playerPhysicBody.bodyDef->GetPosition();
+    auto playerPos = glm::vec2(playerPosBox2d.x, playerPosBox2d.y);
+
+   // auto& playerPos = registry.get<Position>(firstPlayer);
+
+    mobsView.each([&](Mob& mob, PhysicBody& mobPhysicBody) {
+        auto mobPosBox2d = mobPhysicBody.bodyDef->GetPosition();
+        auto mobPos = glm::vec2(mobPosBox2d.x, mobPosBox2d.y);
+        const float distance = glm::distance(mobPos, playerPos);
         if (distance > 1.0f) {
-            const glm::vec2 targetHeading = playerPos.value - mobPos.value;
+            const glm::vec2 targetHeading = playerPos - mobPos;
             const glm::vec2 targetDirection = targetHeading / distance;
-            vel.value = targetDirection * mob.speed;
+            
+            mobPhysicBody.bodyDef->SetLinearVelocity(
+                b2Vec2(targetDirection.x * mob.speed, targetDirection.y * mob.speed));
+
+            // vel.value = targetDirection * mob.speed;
         }
 
         /*
@@ -58,7 +72,7 @@ void MobBehaviour::update(sf::Time deltaTime)
 
     auto mobsCount = mobsView.size_hint();
 
-    if (mobsCount < 3) {
+    if (mobsCount < 5) {
         std::random_device rnd;
         std::default_random_engine eng(rnd());
         std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
@@ -67,16 +81,37 @@ void MobBehaviour::update(sf::Time deltaTime)
 
         auto& mob = registry.emplace<Mob>(e);
         mob.speed = 1.2f;
-        auto& pos = registry.emplace<Position>(e);
-        registry.emplace<Velocity>(e);
+
         auto& spr = registry.emplace<Sprite>(e);
         spr.gfx.setTexture(mobTexture);
+
         const float randScale = 0.5f + randDistr(eng);
         spr.gfx.setScale(randScale, randScale);
 
+        auto& spriteSize = mobTexture.getSize();
+
         auto windowSize = game.getWindow().getSize();
 
-        pos.value.x = static_cast<float>(randDistr(eng)) * windowSize.x;
-        pos.value.y = static_cast<float>(randDistr(eng)) * windowSize.y;
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.position.Set(static_cast<float>(randDistr(eng)) * windowSize.x,
+                             static_cast<float>(randDistr(eng)) * windowSize.y);
+
+        b2PolygonShape dynamicBox;
+        dynamicBox.SetAsBox(static_cast<float>(spriteSize.x) / 2.0f * randScale,
+                            static_cast<float>(spriteSize.y) / 2.0f * randScale);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &dynamicBox;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.3f;
+
+        // TODO: Shit code!!!
+        StatePlaying& playerState = static_cast<StatePlaying&>(state);
+
+        auto& physicBody = registry.emplace<PhysicBody>(e);
+
+        physicBody.bodyDef = playerState.physicWorld->CreateBody(&bodyDef);
+        physicBody.bodyDef->CreateFixture(&fixtureDef);
     }
 }

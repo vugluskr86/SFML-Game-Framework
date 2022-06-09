@@ -66,6 +66,7 @@ void PlayerInput::handleInput()
     auto dist = glm::distance(playerPos, vec2Mouse);
     player.weaponTargetNormalize = target / dist;
 
+    // TODO: Shit code!!!
     StatePlaying& playerState = static_cast<StatePlaying&>(state);
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
