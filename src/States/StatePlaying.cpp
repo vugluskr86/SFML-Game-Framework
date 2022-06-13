@@ -8,9 +8,7 @@
 
 #include "../Game/Components/Bullet.h"
 #include "../Game/Components/Player.h"
-#include "../Game/Components/Position.h"
 #include "../Game/Components/Sprite.h"
-#include "../Game/Components/Velocity.h"
 #include "../Game/Components/Mob.h"
 #include "../Game/Components/PhysicBody.h"
 
@@ -19,6 +17,8 @@
 #include "../Game/Systems/PlayerInput.h"
 #include "../Game/Systems/MobBehaviour.h"
 #include "../Game/Systems/BulletCollision.h"
+
+#include "../Game/eCollideObjectGroups.h"
 
 entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
                         const sf::RenderWindow& window, b2World* physicWorld)
@@ -38,9 +38,9 @@ entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
 
     auto& physicBody = reg.emplace<PhysicBody>(e);
 
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(posX, posY);
+    b2BodyDef body;
+    body.type = b2_dynamicBody;
+    body.position.Set(posX, posY);
 
     b2PolygonShape dynamicBox;
     dynamicBox.SetAsBox(static_cast<float>(spriteSize.x) / 2.0f,
@@ -51,8 +51,10 @@ entt::entity initPlayer(entt::registry& reg, const sf::Texture& texture,
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.3f;
 
-    physicBody.bodyDef = physicWorld->CreateBody(&bodyDef);
-    physicBody.bodyDef->CreateFixture(&fixtureDef);
+    fixtureDef.filter.groupIndex = static_cast<int16>(eCollideObjectGroups::PLAYER);
+
+    physicBody.body = physicWorld->CreateBody(&body);
+    physicBody.body->CreateFixture(&fixtureDef);
 
     return e;
 }
@@ -80,27 +82,7 @@ StatePlaying::StatePlaying(Game& game)
     systems.emplace_back(new SpriteRender(registry, game, *this));
     systems.emplace_back(new SpriteMove(registry, game, *this));
     systems.emplace_back(new MobBehaviour(registry, game, *this));
-
-
-    // 
-    // systems.emplace_back(new BulletCollision(registry, game, *this));
-    // 
-    // 
-    // systems.emplace_back(new SpriteRender(registry, game, *this));
-
-
-    /*
-    b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, 0.0f);
-
-    b2Body* groundBody = physicWorld->CreateBody(&groundBodyDef);
-
-    b2PolygonShape groundBox;
-    groundBox.SetAsBox(100.0f, 100.0f);
-
-
-    groundBody->CreateFixture(&groundBox, 0.0f);
-    */
+    systems.emplace_back(new BulletCollision(registry, game, *this));
 }
 
 StatePlaying::~StatePlaying()
@@ -125,11 +107,11 @@ void StatePlaying::handleInput()
 
 void StatePlaying::update(sf::Time dt)
 {
+    physicWorld->Step(static_cast<float>(dt.asMilliseconds()), 6, 2);
+
     for (auto& system : systems) {
         system->update(dt);
     }
-
-    physicWorld->Step(static_cast<float>(dt.asMilliseconds()), 6, 2);
 }
 
 void StatePlaying::fixedUpdate(sf::Time dt)

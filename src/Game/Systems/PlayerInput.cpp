@@ -6,14 +6,14 @@
 
 #include "../../ResourceManager/ResourceHolder.h"
 
-#include "../Components/Velocity.h"
 #include "../Components/Player.h"
-#include "../Components/Position.h"
 #include "../Components/Bullet.h"
 #include "../Components/Sprite.h"
 #include "../Components/PhysicBody.h"
 
 #include "../../States/StatePlaying.h"
+
+#include "../eCollideObjectGroups.h"
 
 PlayerInput::PlayerInput(entt::registry& reg, Game& game, StateBase& state)
     : BaseSystem(reg, game, state)
@@ -47,19 +47,19 @@ void PlayerInput::handleInput()
         isIdle = false;
     }
     if (isIdle) {
-        physicBody.bodyDef->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+        physicBody.body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
     }
     else {
         const float mean =
             sqrtf(absVelocity.x * absVelocity.x + absVelocity.y * absVelocity.y);
         auto val = (absVelocity / mean) * player.speed;
-        physicBody.bodyDef->SetLinearVelocity(b2Vec2(val.x, val.y));
+        physicBody.body->SetLinearVelocity(b2Vec2(val.x, val.y));
     }
 
     auto [x, y] = sf::Mouse::getPosition(game.getWindow());
 
     // TODO: Check cast, ovverider operations
-    auto playerPosBox2d = physicBody.bodyDef->GetPosition();
+    auto playerPosBox2d = physicBody.body->GetPosition();
     auto playerPos = glm::vec2(playerPosBox2d.x, playerPosBox2d.y);
     const auto vec2Mouse = glm::vec2(x, y);
     auto target = vec2Mouse - playerPos;
@@ -80,9 +80,9 @@ void PlayerInput::handleInput()
 
         auto& physicBody = registry.emplace<PhysicBody>(bulletEntity);
 
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
-        bodyDef.position.Set(playerPos.x, playerPos.y);
+        b2BodyDef body;
+        body.type = b2_dynamicBody;
+        body.position.Set(playerPos.x, playerPos.y);
 
         auto& spriteSize = bulletTexture.getSize();
 
@@ -94,21 +94,17 @@ void PlayerInput::handleInput()
         fixtureDef.shape = &dynamicBox;
         fixtureDef.density = 1.0f;
         fixtureDef.friction = 0.0f;
+        fixtureDef.filter.groupIndex = static_cast<int16>(eCollideObjectGroups::BULLET);
+        fixtureDef.userData.pointer = static_cast<uintptr_t>(bulletEntity);
 
         // TODO: Shit code!!!!
         auto playing = (StatePlaying*)(&state);
 
-        physicBody.bodyDef = playing->physicWorld->CreateBody(&bodyDef);
-        physicBody.bodyDef->CreateFixture(&fixtureDef);
+        physicBody.body = playing->physicWorld->CreateBody(&body);
+        physicBody.body->CreateFixture(&fixtureDef);
 
         auto velocity = player.weaponTargetNormalize * 10.0f;
 
-        physicBody.bodyDef->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
-
-        // bulletPos.value = playerPos;
-        // bulletVel.value = player.weaponTargetNormalize * 10.0f;
-
-        // TODO: Shit code, integration WIP
-        // physicBody.bodyDef = playerState.physicWorld->CreateBody(new b2BodyDef());
+        physicBody.body->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
     }
 }

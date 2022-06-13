@@ -7,6 +7,7 @@
 struct PhysicBody {
     PhysicBody()
         : collide(false)
+        , body(nullptr)
     {
 
     }
@@ -14,5 +15,5 @@ struct PhysicBody {
 
     // Memory from box2d allocator
     // TODO: Check it
-    b2Body* bodyDef;
+    b2Body* body;
 };

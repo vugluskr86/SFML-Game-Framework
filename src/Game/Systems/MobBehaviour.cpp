@@ -7,8 +7,6 @@
 
 #include "../../ResourceManager/ResourceHolder.h"
 
-#include "../Components/Position.h"
-#include "../Components/Velocity.h"
 #include "../Components/Mob.h"
 #include "../Components/Player.h"
 #include "../Components/Bullet.h"
@@ -16,6 +14,8 @@
 #include "../Components/PhysicBody.h"
 
 #include "../../States/StatePlaying.h"
+
+#include "../eCollideObjectGroups.h"
 
 MobBehaviour::MobBehaviour(entt::registry& reg, Game& game, StateBase& state)
     : BaseSystem(reg, game, state)
@@ -25,54 +25,32 @@ MobBehaviour::MobBehaviour(entt::registry& reg, Game& game, StateBase& state)
 
 void MobBehaviour::update(sf::Time deltaTime)
 {
-    auto mobsView = registry.view<Mob, PhysicBody>();
 
-    auto view = registry.view<Player, PhysicBody>();
-    auto firstPlayer = view.front();
+    auto mobsView = registry.view<Mob, PhysicBody>();
+    auto playerView = registry.view<Player, PhysicBody>();
+
+    auto firstPlayer = playerView.front();
 
     auto& playerPhysicBody = registry.get<PhysicBody>(firstPlayer);
-    auto playerPosBox2d = playerPhysicBody.bodyDef->GetPosition();
+    auto playerPosBox2d = playerPhysicBody.body->GetPosition();
     auto playerPos = glm::vec2(playerPosBox2d.x, playerPosBox2d.y);
-
-   // auto& playerPos = registry.get<Position>(firstPlayer);
-
+    
     mobsView.each([&](Mob& mob, PhysicBody& mobPhysicBody) {
-        auto mobPosBox2d = mobPhysicBody.bodyDef->GetPosition();
+        auto mobPosBox2d = mobPhysicBody.body->GetPosition();
         auto mobPos = glm::vec2(mobPosBox2d.x, mobPosBox2d.y);
         const float distance = glm::distance(mobPos, playerPos);
         if (distance > 1.0f) {
             const glm::vec2 targetHeading = playerPos - mobPos;
             const glm::vec2 targetDirection = targetHeading / distance;
             
-            mobPhysicBody.bodyDef->SetLinearVelocity(
+            mobPhysicBody.body->SetLinearVelocity(
                 b2Vec2(targetDirection.x * mob.speed, targetDirection.y * mob.speed));
-
-            // vel.value = targetDirection * mob.speed;
         }
-
-        /*
-        const float distance = glm::distance(mobPos.value, playerPos.value);
-        const float DISTANCE_TO_SHOTING = 200.0f;
-        if (distance <= DISTANCE_TO_SHOTING) {
-            glm::vec2 targetHeading = playerPos.value - mobPos.value;
-            glm::vec2 targetDirection = targetHeading / distance;
-
-            const entt::entity e = registry.create();
-
-            registry.emplace<Bullet>(e);
-            auto& bulletVel = registry.emplace<Velocity>(e);
-            auto& bulletPos = registry.emplace<Position>(e);
-
-            bulletPos.value = mobPos.value;
-            bulletVel.value = targetDirection * 10.0f;
-        }
-        */
     });
-
 
     auto mobsCount = mobsView.size_hint();
 
-    if (mobsCount < 5) {
+    if (mobsCount < 3) {
         std::random_device rnd;
         std::default_random_engine eng(rnd());
         std::uniform_real_distribution<float> randDistr(0.0f, 1.0f);
@@ -92,9 +70,9 @@ void MobBehaviour::update(sf::Time deltaTime)
 
         auto windowSize = game.getWindow().getSize();
 
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
-        bodyDef.position.Set(static_cast<float>(randDistr(eng)) * windowSize.x,
+        b2BodyDef body;
+        body.type = b2_dynamicBody;
+        body.position.Set(static_cast<float>(randDistr(eng)) * windowSize.x,
                              static_cast<float>(randDistr(eng)) * windowSize.y);
 
         b2PolygonShape dynamicBox;
@@ -111,7 +89,10 @@ void MobBehaviour::update(sf::Time deltaTime)
 
         auto& physicBody = registry.emplace<PhysicBody>(e);
 
-        physicBody.bodyDef = playerState.physicWorld->CreateBody(&bodyDef);
-        physicBody.bodyDef->CreateFixture(&fixtureDef);
+        fixtureDef.filter.groupIndex = static_cast<int16>(eCollideObjectGroups::MOB);
+        fixtureDef.userData.pointer = static_cast<uintptr_t>(e);
+
+        physicBody.body = playerState.physicWorld->CreateBody(&body);
+        physicBody.body->CreateFixture(&fixtureDef);
     }
 }

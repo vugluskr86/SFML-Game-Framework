@@ -6,6 +6,9 @@ struct Mob
 {
     Mob()
         : _died(false)
+        , health(1)
+        , speed(1)
+        , target(0,0)
     {
     
 	}

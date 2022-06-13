@@ -6,7 +6,8 @@ project(GAME_NAME VERSION 1.0)
 #Set executable
 add_executable(${PROJECT_NAME}     
 	"src/main.cpp" "src/Game.cpp" "src/ResourceManager/ResourceHolder.cpp" "src/States/StatePlaying.cpp" "src/Util/Animation.cpp" "src/Util/FileUtil.cpp" "src/Util/FPSCounter.cpp" "src/Util/Maths.cpp" "src/Util/Maths.cpp" "src/Game/Systems/SpriteRender.h" "src/Game/BaseSystem.h" "src/Game/Systems/SpriteRender.cpp" "src/Game/Systems/SpriteMove.h" "src/Game/Systems/SpriteMove.cpp"  "src/Game/Systems/PlayerInput.h" "src/Game/Systems/PlayerInput.cpp" "src/Game/Systems/MobBehaviour.h" "src/Game/Systems/MobBehaviour.cpp"  "src/Game/Systems/BulletCollision.h" "src/Game/Systems/BulletCollision.cpp" "src/Game/Components/Weapon.h"
- "src/Game/Components/PhysicBody.h" "src/Util/Box2dDebugDraw.h")
+ "src/Game/Components/PhysicBody.h" "src/Util/Box2dDebugDraw.h"  "src/Game/eCollideObjectGroups.h"
+ )
 
 #Set C++17
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
@@ -44,6 +45,7 @@ add_subdirectory(deps/imgui)
 add_subdirectory(deps/imgui_sfml)
 add_subdirectory(deps/glm)
 add_subdirectory(deps/entt)
+add_subdirectory(deps/optick)
 
 target_include_directories(
     ${PROJECT_NAME}
@@ -64,3 +66,7 @@ target_link_libraries(${PROJECT_NAME}
     sfml-window
     ${OPENGL_LIBRARIES} 
 )
+
+#if(MSVC)
+#    target_link_libraries(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/deps/optick/bin/vs2019/x64/Debug/OptickCore.lib")
+#endif()

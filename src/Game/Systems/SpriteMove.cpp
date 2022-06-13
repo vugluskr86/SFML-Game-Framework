@@ -11,9 +11,12 @@ void SpriteMove::update(sf::Time deltaTime)
 {
     auto view = registry.view<Sprite, PhysicBody>();
     
-    view.each([](auto& spr, auto& physicBody) {
-        auto& pos = physicBody.bodyDef->GetPosition();
-        auto& sprSize = spr.gfx.getTextureRect();
-        spr.gfx.setPosition(pos.x - sprSize.width / 2.0f, pos.y - sprSize.height / 2.0f);
+    view.each([](auto entity, auto& spr, PhysicBody& physicBody) {
+        if (physicBody.body != nullptr) {
+            auto& pos = physicBody.body->GetPosition();
+            auto& sprSize = spr.gfx.getTextureRect();
+            spr.gfx.setPosition(pos.x - sprSize.width / 2.0f,
+                                pos.y - sprSize.height / 2.0f);
+        }
     });
 }

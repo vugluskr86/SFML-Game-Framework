@@ -1,11 +1,25 @@
 #include "Game.h"
 
-#include "States/StatePlaying.h"
-
 #include <iostream>
 
+// #include <optick/src/optick.h>
+
+#include "States/StatePlaying.h"
+
+/*
+#if OPTICK_MSVC
+#pragma warning(push)
+
+// C4250. inherits 'std::basic_ostream'
+#pragma warning(disable : 4250)
+
+// C4127. Conditional expression is constant
+#pragma warning(disable : 4127)
+#endif
+*/
+
 Game::Game()
-    : m_window({1280, 720}, "Space Invaders")
+    : m_window({1280, 720}, "GAME_NAME")
 {
     m_window.setPosition({m_window.getPosition().x, 0});
     m_window.setFramerateLimit(120);
@@ -23,8 +37,11 @@ void Game::run()
     auto lastTime = sf::Time::Zero;
     auto lag = sf::Time::Zero;
 
+    // OPTICK_APP("ConsoleApp");
+
     // Main loop of the game
     while (m_window.isOpen() && !m_states.empty()) {
+        // OPTICK_FRAME("MainThread");
         auto& state = getCurrentState();
 
         // Get times
@@ -55,6 +72,8 @@ void Game::run()
         handleEvent();
         tryPop();
     }
+
+    // OPTICK_SHUTDOWN();
 }
 
 // Tries to pop the current game state
@@ -123,3 +142,7 @@ const sf::RenderWindow& Game::getWindow() const
 {
     return m_window;
 }
+
+//#if OPTICK_MSVC
+//#pragma warning(pop)
+//#endif

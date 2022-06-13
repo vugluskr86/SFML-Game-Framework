@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "../Components/Sprite.h"
-#include "../Components/Position.h"
 #include "../Components/Player.h"
 
 void SpriteRender::render(sf::RenderTarget& renderer)
